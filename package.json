@@ -1,0 +1,27 @@
+{
+  "name": "the-universal-modules",
+  "version": "0.1.0",
+  "description": "Module registry and utilities for The Universal project",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TheUniversal/the-universal-modules.git"
+  },
+  "keywords": [
+    "universal",
+    "remote",
+    "playback",
+    "player",
+    "modules",
+    "registry"
+  ],
+  "author": "Matias Klemola",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/TheUniversal/the-universal-modules/issues"
+  },
+  "homepage": "https://github.com/TheUniversal/the-universal-modules",
+  "dependencies": {
+    "the-universal-common": "0.1.3",
+    "tum-foobar2000": "0.1.0"
+  }
+}
