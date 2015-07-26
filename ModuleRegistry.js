@@ -6,6 +6,9 @@ var modules = {
     },
     foobar2000: function () {
         return require('tum-foobar2000');
+    },
+    itunes : function () {
+        return require('tum-itunes');
     }
 };
 
