@@ -1,21 +1,25 @@
 'use strict';
 
 var modules = {
-    mockPlayer: require('the-universal-common/mock/MockPlayerModule'),
-    foobar2000:  require('tum-foobar2000')
+    mockPlayer: function () {
+        return require('the-universal-common/mock/MockPlayerModule');
+    },
+    foobar2000: function () {
+        return require('tum-foobar2000');
+    }
 };
 
 module.exports = function ModuleRegistry() {
     
     return {
         getModule: function(moduleName, dispatcher){
-            var Module = modules[moduleName];
+            var module = modules[moduleName];
 
-            if (!Module) {
+            try {
+                return module()(dispatcher);
+            } catch (error) {
                 throw new Error("Module not found", moduleName);
             }
-
-            return Module(dispatcher);
         }
     }
 };
