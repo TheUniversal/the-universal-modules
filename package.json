@@ -1,6 +1,6 @@
 {
   "name": "the-universal-modules",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Module registry and utilities for The Universal project",
   "repository": {
     "type": "git",
