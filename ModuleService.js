@@ -1,48 +1,58 @@
 'use strict';
 
-var moduleRegistry = require('./ModuleRegistry')();
+import modules from './Modules';
 
-var activeModule;
+let activeModule = null;
 
-function getModuleInfo() {
-    if (!activeModule) { return null }
+const getModule = (moduleName) => {
+    let connectorModule = modules[moduleName];
 
-    return {
-        name: activeModule.name,
-        supportedCommands: activeModule.supportedCommands
-    }
-}
-
-module.exports = function ModuleService(dispatcher) {
-
-    return {
-        loadModule: function (moduleName) {
-            activeModule = moduleRegistry.getModule(moduleName, dispatcher);
-            console.log('Loaded module: ', activeModule.name);
-
-            activeModule.onActivateModule();
-            dispatcher.onActivateModule(getModuleInfo());
-            console.log('Activated module: ', activeModule.name);
-        },
-
-        unloadModule: function(){
-            console.log('Deactivating module: ', activeModule.name);
-            activeModule.onDeactivateModule();
-            activeModule = null;
-        },
-
-        getModuleInfo: getModuleInfo,
-
-        updatePlaybackState: function (command) {
-            console.log('Playback: ', command);
-            activeModule.onPlaybackCommand(command);
-        },
-
-        updateVolumeLevel: function (command) {
-            console.log('Volume change: ', command);
-            activeModule.onVolumeChange(command);
-        }
+    try {
+        return connectorModule();
+    } catch (error) {
+        throw new Error("Module not found", moduleName);
     }
 };
+
+export default class ModuleService {
+
+    constructor(dispatcher) {
+        this.dispatcher = dispatcher;
+    }
+
+    loadModule(moduleName) {
+        activeModule = getModule(moduleName)(this.dispatcher);
+        console.log('Loaded module: ', activeModule.name);
+
+        activeModule.onActivateModule();
+        this.dispatcher.onActivateModule(this.getModuleInfo());
+        console.log('Activated module: ', activeModule.name);
+    }
+
+    unloadModule(){
+        console.log('Deactivating module: ', activeModule.name);
+        activeModule.onDeactivateModule();
+        activeModule = null;
+    }
+
+    getModuleInfo() {
+        if (!activeModule) { return null }
+
+        return {
+            name: activeModule.name,
+            supportedCommands: activeModule.supportedCommands
+        }
+    }
+
+    updatePlaybackState(command) {
+        console.log('Playback: ', command);
+        activeModule.onPlaybackCommand(command);
+    }
+
+    updateVolumeLevel(command){
+        console.log('Volume change: ', command);
+        activeModule.onVolumeChange(command);
+    }
+}
 
 
